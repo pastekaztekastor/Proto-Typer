@@ -1,0 +1,48 @@
+cmake_minimum_required(VERSION 3.15)
+project(prototyper)
+
+# Activer le support de C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Ajouter le dossier d'en-têtes au chemin d'inclusion
+include_directories(${CMAKE_SOURCE_DIR}/src/header)
+
+# Ajouter les fichiers sources
+set(SOURCES
+    src/main.cpp
+    src/code/key.cpp
+    src/code/keyboard.cpp
+)
+
+# Inclure les fichiers sources de Dear ImGui
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/lib/imgui)
+set(IMGUI_SOURCES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+# Trouver les packages nécessaires
+find_package(glfw3 3.3 REQUIRED)
+find_package(OpenGL REQUIRED)
+
+# Créer l'exécutable
+add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI_SOURCES})
+
+# Inclure les répertoires d'en-têtes
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${IMGUI_DIR}
+    ${IMGUI_DIR}/backends
+    ${OPENGL_INCLUDE_DIR}
+)
+
+# Lier les bibliothèques nécessaires
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    glfw
+    ${OPENGL_gl_LIBRARY}
+)

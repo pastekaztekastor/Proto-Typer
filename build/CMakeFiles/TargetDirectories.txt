@@ -1,0 +1,3 @@
+/Users/Mathurin/Documents/Proto Typer/build/CMakeFiles/prototyper.dir
+/Users/Mathurin/Documents/Proto Typer/build/CMakeFiles/edit_cache.dir
+/Users/Mathurin/Documents/Proto Typer/build/CMakeFiles/rebuild_cache.dir
