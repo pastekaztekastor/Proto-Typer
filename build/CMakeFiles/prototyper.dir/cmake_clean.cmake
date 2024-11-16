@@ -17,6 +17,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/prototyper.dir/src/code/key.cpp.o.d"
   "CMakeFiles/prototyper.dir/src/code/keyboard.cpp.o"
   "CMakeFiles/prototyper.dir/src/code/keyboard.cpp.o.d"
+  "CMakeFiles/prototyper.dir/src/code/training.cpp.o"
+  "CMakeFiles/prototyper.dir/src/code/training.cpp.o.d"
   "CMakeFiles/prototyper.dir/src/main.cpp.o"
   "CMakeFiles/prototyper.dir/src/main.cpp.o.d"
   "prototyper"

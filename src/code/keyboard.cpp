@@ -1,6 +1,10 @@
 #include <iostream>
 #include "keyboard.h"
 #include "define.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 
 Keyboard::Keyboard() 
@@ -12,6 +16,7 @@ Keyboard::Keyboard()
 void Keyboard::initialise()
 {
     // TODO Charge une config
+    /*
     addKey(Key({"<"}, {0 , 0, 1, 0}         ));
     addKey(Key({"&"}, {2 , 0}               ));
     addKey(Key({"é"}, {3 , 0}               ));
@@ -74,6 +79,7 @@ void Keyboard::initialise()
     addKey(Key({"Fn"}, {12, 4}));
     addKey(Key({"Menu"}, {13, 4}));
     addKey(Key({"Ctrl"}, {14, 4}));
+    */
 }
 
 void Keyboard::addKey(Key key) 
@@ -89,7 +95,7 @@ void Keyboard::render(ImGuiIO io)
     vue_liste_touche(io);
     for (auto& key : keys_)
     {
-        key.vue_reglages(io);
+        key.view_settings(io);
     }
     
 }
@@ -127,7 +133,8 @@ void Keyboard::vue_clavier(ImGuiIO io)
                 taille_de_touche,
                 bordure_clavier,
                 bordure_clavier_top_,
-                draw_list);
+                draw_list,
+                0); // TODO géré les modifier pour changer les touche sur le clavier
         }
         ImGui::End();
     }
@@ -152,7 +159,7 @@ void Keyboard::vue_reglage(ImGuiIO io)
         {
             for(auto& key : keys_)
             {
-                key.set_couleur_remplissage(couleur_remplissage);
+                key.set_color_idle(couleur_remplissage);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
@@ -168,7 +175,7 @@ void Keyboard::vue_reglage(ImGuiIO io)
         {
             for(auto& key : keys_)
             {
-                key.set_couleur_attente(couleur_attente_1);
+                key.set_color_waiting(couleur_attente_1);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
@@ -176,7 +183,7 @@ void Keyboard::vue_reglage(ImGuiIO io)
         {
             for(auto& key : keys_)
             {
-                key.set_couleur_attente(couleur_attente_2);
+                key.set_color_waiting(couleur_attente_2);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
@@ -184,7 +191,7 @@ void Keyboard::vue_reglage(ImGuiIO io)
         {
             for(auto& key : keys_)
             {
-                key.set_couleur_attente(couleur_attente_3);
+                key.set_color_waiting(couleur_attente_3);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
@@ -192,7 +199,7 @@ void Keyboard::vue_reglage(ImGuiIO io)
         {
             for(auto& key : keys_)
             {
-                key.set_couleur_attente(couleur_attente_4);
+                key.set_color_waiting(couleur_attente_4);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
@@ -200,7 +207,7 @@ void Keyboard::vue_reglage(ImGuiIO io)
         {
             for(auto& key : keys_)
             {
-                key.set_couleur_attente(couleur_attente_5);
+                key.set_color_waiting(couleur_attente_5);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
@@ -237,7 +244,7 @@ void Keyboard::vue_liste_touche(ImGuiIO io)
             auto& key = keys_[i];
 
             if (ImGui::Button(("Éditer##" + std::to_string(i)).c_str())) {
-                key.is_afficher_reglage = !key.is_afficher_reglage;
+                key.is_plot_settings = !key.is_plot_settings;
                // ImGui::OpenPopup("Édition de la touche");
             }
             ImGui::SameLine();
@@ -248,11 +255,91 @@ void Keyboard::vue_liste_touche(ImGuiIO io)
             }
             ImGui::PopStyleColor(1); 
             ImGui::SameLine();
-            ImGui::Text("Touche %zu : %s", i + 1, key.get_label().c_str());
+            ImGui::Text("Touche %zu : %s", i + 1, key.get_labels_by_index(0).c_str());
         }
         ImGui::End();
     }
 }
+
+int Keyboard::chargerConfigurationClavier(const std::string &cheminFichier)
+{
+    std::ifstream fichier(cheminFichier);
+    if (!fichier.is_open()) 
+    {
+        std::cerr << "Erreur lors de l'ouverture du fichier : " << cheminFichier << std::endl;
+        return 0;
+    }
+
+    nlohmann::json j;
+    fichier >> j;
+    int nb_touche_charge = 0;
+
+    for (const auto& item : j["keys"]) 
+    {
+        nb_touche_charge++;
+        Key key;
+
+        // Chargement des positions
+        if (item.contains("positions") && item["positions"].is_array())
+        {
+            for (const auto& posItem : item["positions"]) 
+            {
+                if (posItem.contains("x") && posItem.contains("y") &&
+                    posItem["x"].is_number_integer() && posItem["y"].is_number_integer())
+                {
+                    int x = posItem["x"].get<int>();
+                    int y = posItem["y"].get<int>();
+                    key.add_position({x, y});
+                }
+                else
+                {
+                    std::cerr << "Position invalide pour une touche." << std::endl;
+                }
+            }
+        }
+        else
+        {
+            std::cerr << "Aucune position définie pour une touche." << std::endl;
+        }
+        // Chargmenet de la position du text
+        if (item.contains("lbl_pos"))
+        {
+            // todo
+        }
+        if (item.contains("finger"))
+        {
+            // todo
+        }
+        // Chargement des caractères et modificateurs
+        if (item.contains("chars") && item["chars"].is_array())
+        {
+            for (const auto& charItem : item["chars"]) 
+            {
+                if (charItem.contains("char"))
+                {
+                    char character = charItem["char"].get<std::string>()[0];
+                    int m1 = charItem["mod_1"].get<int>();
+                    int m2 = charItem["mod_2"].get<int>();
+
+                    key.add_char(character, m1, m2);
+                }
+                else
+                {
+                    std::cerr << "Caractère invalide pour une touche." << std::endl;
+                }
+            }
+        }
+        else
+        {
+            std::cerr << "Aucun caractère défini pour une touche." << std::endl;
+        }
+
+        keys_.push_back(key);
+    }
+    return nb_touche_charge;
+}
+
+
 
 std::vector<Key> Keyboard::get_keys()
 {
@@ -280,13 +367,15 @@ void Keyboard::update_listes()
     for (size_t i = 0; i < keys_.size(); i++)
     {
         auto& key = keys_[i];
-        for (size_t j = 0; i < key.nombre_de_char(); j++)
+        for (size_t j = 0; i < key.get_nb_char(); j++)
         {
             const auto& charactere = key.get_char_by_index(j);    // Liste de tous les char contenue sur toutes les touches
-            const auto& modifier = key.get_modifiers_by_index(j);  // Liste de tous les modifier de chaque char 
+            const auto& modifier1 = key.get_mod_1_by_index(j);  // Liste de tous les modifier de chaque char 
+            const auto& modifier2 = key.get_mod_2_by_index(j);  // Liste de tous les modifier de chaque char 
 
             liste_des_char.push_back(charactere);
-            liste_des_modifier.push_back(modifier);
+            liste_des_modifier_1.push_back(modifier1);
+            liste_des_modifier_2.push_back(modifier2);
             liste_des_index_des_touches.push_back(i);
         }
     }
@@ -301,6 +390,7 @@ int Keyboard::key_index_of_char(char c)
             return i;
         }   
     }
+    return -1;
 }
 
 void Keyboard::plot_cases(ImGuiIO io)

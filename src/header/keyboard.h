@@ -1,11 +1,15 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include <vector>
-#include <string>
 #include "imgui.h"
 #include "define.h"
 #include "key.h"
+#include <vector>
+#include <string>
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 class Keyboard {
 public:
@@ -19,6 +23,9 @@ public:
     void vue_clavier(ImGuiIO io);
     void vue_reglage(ImGuiIO io);
     void vue_liste_touche(ImGuiIO io);
+
+    int chargerConfigurationClavier(const std::string& cheminFichier);
+
 
     std::vector<Key> get_keys ();
 
@@ -48,7 +55,8 @@ private:
     ImVec2 position_fenetre                 ;
     
     std::vector<char> liste_des_char                  = _INITIALISE_VECTOR_;    // Liste de tous les char contenue sur toutes les touches
-    std::vector<std::vector<int>> liste_des_modifier  = {_INITIALISE_VECTOR_};  // Liste de tous les modifier de chaque char 
+    std::vector<int> liste_des_modifier_1             = {_INITIALISE_VECTOR_};  // Liste de tous les modifier de chaque char 
+    std::vector<int> liste_des_modifier_2             = {_INITIALISE_VECTOR_};  // Liste de tous les modifier de chaque char 
     std::vector<int> liste_des_index_des_touches      = _INITIALISE_VECTOR_;    // Index de chaque touche dans le liste de touche
     int index_des_listes                              = 0;                      // Index des listes
 

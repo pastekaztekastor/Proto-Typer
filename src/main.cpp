@@ -7,7 +7,13 @@
 #include "key.h"
 #include "define.h"
 #include "keyboard.h"
+#include "training.h"
 #include <vector>
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iostream>
+#include <string>
+
 
 
 
@@ -20,6 +26,8 @@ void glfw_error_callback(int error, const char* description)
 int main(int, char**)
 {
     Keyboard keyboard;
+    keyboard.chargerConfigurationClavier("../config/keyboard/fr-fr.json");
+    Training training;
 
     // Configurer le callback d'erreur GLFW
     glfwSetErrorCallback(glfw_error_callback);
@@ -81,11 +89,16 @@ int main(int, char**)
         }
         ImGui::SeparatorText("Progession");
         ImGui::SeparatorText("Entrainement");
+        if (ImGui::Checkbox("Texte", &training.is_vu_text_a_copier)) {
+        }
+        if (ImGui::Checkbox("Exercie", &training.is_vu_exercice)) {
+        }
 
         ImGui::End();
 
         // Rendre la frame ImGui
         keyboard.render(io);
+        training.render(io);
         ImGui::Render();
         glViewport(0, 0, display_w, display_h);
         glClearColor(0.1, 0.1, 0.1, 1.00f);
