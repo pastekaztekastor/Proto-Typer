@@ -14,10 +14,10 @@
 #define _DEFAULT_FULLSCREEN_MODE_   0  // 0 = fenêtré, 1 = plein écran
 #define _DEFAULT_FRAME_RATE_        60
 
-typedef struct {
+struct _coordinate_ {
     int x;
     int y;
-} _coordinate_;
+};
 
 #define _DEFAULT_COORDINATE_            _coordinate_{0,0}
 

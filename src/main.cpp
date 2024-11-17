@@ -26,7 +26,7 @@ void glfw_error_callback(int error, const char* description)
 int main(int, char**)
 {
     Keyboard keyboard;
-    keyboard.chargerConfigurationClavier("../config/keyboard/fr-fr.json");
+    keyboard.load("../config/keyboard/fr-fr.json");
     Training training;
 
     // Configurer le callback d'erreur GLFW
@@ -77,11 +77,11 @@ int main(int, char**)
         ImGui::Begin("Menu");
         ImGui::SeparatorText("Clavier");
 
-        if (ImGui::Checkbox("Réglage", &keyboard.is_afficher_settings_)) {
+        if (ImGui::Checkbox("Réglage", &keyboard.is_plot_settings)) {
         }
-        if (ImGui::Checkbox("Touches", &keyboard.is_afficher_liste_touches)) {
+        if (ImGui::Checkbox("Touches", &keyboard.is_plot_key_list)) {
         }
-        if (ImGui::Checkbox("Afficher", &keyboard.is_afficher_clavier)) {
+        if (ImGui::Checkbox("Afficher", &keyboard.is_plot_keyboard)) {
         }
         if (ImGui::Button("Charger une clavier")) {
         }

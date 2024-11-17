@@ -1,3 +1,25 @@
+/**
+ *  _  __          _                         _ 
+ * | |/ /         | |                       | |
+ * | ' / ___ _   _| |__   ___   __ _ _ __ __| |
+ * |  < / _ \ | | | '_ \ / _ \ / _` | '__/ _` |
+ * | . \  __/ |_| | |_) | (_) | (_| | | | (_| |
+ * |_|\_\___|\__, |_.__/ \___/ \__,_|_|  \__,_|
+ *            __/ |                            
+ *           |___/                             
+ * 
+ * @file keyboard.cpp
+ * @brief Cf ../header/keyboard.h
+ * 
+ * @author Mathurin Champémont
+ * @date 17 novembre 2024
+ *
+ * @version 1.0.0
+ *
+ * @copyright MIT License
+ *
+ * @note 
+ */
 #include <iostream>
 #include "keyboard.h"
 #include "define.h"
@@ -9,239 +31,173 @@
 
 Keyboard::Keyboard() 
 {
-    position_fenetre = {0.f, 0.f}; // Valeur d'initialisation 
-    initialise();
-}
-
-void Keyboard::initialise()
-{
-    // TODO Charge une config
-    /*
-    addKey(Key({"<"}, {0 , 0, 1, 0}         ));
-    addKey(Key({"&"}, {2 , 0}               ));
-    addKey(Key({"é"}, {3 , 0}               ));
-    addKey(Key({"\""},{4 , 0}               ));
-    addKey(Key({"'"}, {5 , 0}               ));
-    addKey(Key({"("}, {6 , 0}               ));
-    addKey(Key({"§"}, {7 , 0}               ));
-    addKey(Key({"è"}, {8 , 0}               ));
-    addKey(Key({"!"}, {9 , 0}               ));
-    addKey(Key({"ç"}, {10 , 0}              ));
-    addKey(Key({"à"}, {11, 0}               ));
-    addKey(Key({")"}, {12, 0}               ));
-    addKey(Key({"-"}, {13, 0}               ));
-    addKey(Key({"Escape"}, {14, 0}          ));
-    addKey(Key({"Tab"}, {0, 1, 1, 1}        ));
-    addKey(Key({"A"}, {2, 1}                ));
-    addKey(Key({"Z"}, {3, 1}                ));
-    addKey(Key({"E"}, {4, 1}                ));
-    addKey(Key({"R"}, {5, 1}                ));
-    addKey(Key({"T"}, {6, 1}                ));
-    addKey(Key({"Y"}, {7, 1}                ));
-    addKey(Key({"U"}, {8, 1}                ));
-    addKey(Key({"I"}, {9, 1}                ));
-    addKey(Key({"O"}, {10, 1}               ));
-    addKey(Key({"P"}, {11, 1}               ));
-    addKey(Key({"^"}, {12, 1}               ));
-    addKey(Key({"$"}, {13, 1}               ));
-    addKey(Key({"Enter"}, {14, 1, 14, 2}    ));
-    addKey(Key({"Ver\nMaj"}, {0, 2, 1, 2}   ));
-    addKey(Key({"Q"}, {2, 2}                ));
-    addKey(Key({"S"}, {3, 2}                ));
-    addKey(Key({"D"}, {4, 2}                ));
-    addKey(Key({"F"}, {5, 2}                ));
-    addKey(Key({"G"}, {6, 2}                ));
-    addKey(Key({"H"}, {7, 2}                ));
-    addKey(Key({"J"}, {8, 2}                ));
-    addKey(Key({"K"}, {9, 2}                ));
-    addKey(Key({"L"}, {10, 2}               ));
-    addKey(Key({"M"}, {11, 2}               ));
-    addKey(Key({"Ù"}, {12, 2}               ));
-    addKey(Key({"`"}, {13, 2}               ));
-    addKey(Key({"Maj"}, {0, 3}              ));
-    addKey(Key({"@"}, {1, 3}                ));
-    addKey(Key({"W"}, {2, 3}                ));
-    addKey(Key({"X"}, {3, 3}                ));
-    addKey(Key({"C"}, {4, 3}                ));
-    addKey(Key({"V"}, {5, 3}                ));
-    addKey(Key({"B"}, {6, 3}                ));
-    addKey(Key({"N"}, {7, 3}                ));
-    addKey(Key({","}, {8, 3}                ));
-    addKey(Key({";"}, {9, 3}                ));
-    addKey(Key({":"}, {10, 3}               ));
-    addKey(Key({"="}, {11, 3}               ));
-    addKey(Key({"Maj"}, {12, 3, 13, 3, 14, 3}));
-    addKey(Key({"Ctrl"}, {0, 4}));
-    addKey(Key({"Cmd"}, {1, 4}));
-    addKey(Key({"Alt"}, {2, 4}));
-    addKey(Key({"Espace"}, {3, 4, 4, 4, 5, 4, 6, 4, 7, 4, 8, 4, 9, 4, 10, 4}));
-    addKey(Key({"Alt"}, {11, 4}));
-    addKey(Key({"Fn"}, {12, 4}));
-    addKey(Key({"Menu"}, {13, 4}));
-    addKey(Key({"Ctrl"}, {14, 4}));
-    */
+    windows_position = {0.f, 0.f}; // Valeur d'initialisation 
 }
 
 void Keyboard::addKey(Key key) 
 {
-    keys_.push_back(key);
+    keys.push_back(key);
 }
 
-void Keyboard::render(ImGuiIO io) 
+void Keyboard::render(ImGuiIO& io) 
 {
-
-    vue_clavier(io);
-    vue_reglage(io);
-    vue_liste_touche(io);
-    for (auto& key : keys_)
+    view_keyboard(io);
+    view_settings(io);
+    view_key_list(io);
+    for (auto& key : keys)
     {
         key.view_settings(io);
     }
-    
 }
 
-void Keyboard::vue_clavier(ImGuiIO io)
+void Keyboard::view_keyboard(ImGuiIO& io)
 {
-    if(is_afficher_clavier)
+    if(is_plot_keyboard)
     {
-        ImGui::Begin("Clavier Virtuel", &is_afficher_clavier);
+        ImGui::Begin("Clavier Virtuel", &is_plot_keyboard);
 
-        taille_de_touche = 
+        key_size = 
         {
-            (ImGui::GetWindowSize().x-(bordure_clavier*2))/grille[0], 
-            (ImGui::GetWindowSize().y-(bordure_clavier*2)-bordure_clavier_top_)/grille[1]
+            (ImGui::GetWindowSize().x-(border_keyboard*2))/grid_dimention[0], 
+            (ImGui::GetWindowSize().y-(border_keyboard*2)-border_keyboard_top)/grid_dimention[1]
         };
-        position_fenetre = ImGui::GetWindowPos();
+        windows_position = ImGui::GetWindowPos();
 
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
-        if (is_afficher_points_) 
+        if (is_plot_grid_view_keyboard) 
         {
-            plot_cases(io);
+            plot_grid(io);
         }
-        if (is_afficher_points_) 
+        if (is_plot_dot_view_keyboard) 
         {
-            plot_points(io);
+            plot_dot(io);
+        }
+        if (is_edit_mode)
+        {
+            coord_of_mouse(io);
         }
 
-        for (auto& key : keys_) 
+        for (auto& key : keys) 
         {
-            key.render(
+            key.render
+            (
                 io, 
-                position_fenetre, 
-                bordure_touche, 
-                taille_de_touche,
-                bordure_clavier,
-                bordure_clavier_top_,
+                windows_position, 
+                border_key, 
+                key_size,
+                border_keyboard,
+                border_keyboard_top,
                 draw_list,
-                0); // TODO géré les modifier pour changer les touche sur le clavier
+                0
+            ); // TODO géré les modifier pour changer les touche sur le clavier
         }
         ImGui::End();
     }
 }
 
-void Keyboard::vue_reglage(ImGuiIO io)
+void Keyboard::view_settings(ImGuiIO& io)
 {
-    if (is_afficher_settings_) 
+    if (is_plot_settings) 
     {
-        ImGui::Begin("Paramètre clavier",&is_afficher_settings_);
+        ImGui::Begin("Paramètre clavier",&is_plot_settings);
         if (ImGui::Button("Exit")) {
-            is_afficher_settings_ = false;
+            is_plot_settings = false;
         }
         ImGui::SameLine();
         if (ImGui::Button("Touches")) {}
         ImGui::SameLine();
-        if (ImGui::Checkbox("Edition",&is_afficher_points_)){}
+        if (ImGui::Checkbox("Edition",&is_plot_dot_view_keyboard)){}
         
         ImGui::SeparatorText("Clavier");
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur remplissage",(float*)&couleur_remplissage))
+        if (ImGui::ColorEdit4("couleur remplissage",(float*)&color_bkg_key))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_color_idle(couleur_remplissage);
+                key.set_color_idle(color_bkg_key);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur texte",(float*)&couleur_text))
+        if (ImGui::ColorEdit4("couleur texte",(float*)&color_text))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_couleur_text(couleur_text);
+                key.set_couleur_text(color_text);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur attente auriculaire",(float*)&couleur_attente_1))
+        if (ImGui::ColorEdit4("couleur attente auriculaire",(float*)&color_f_little))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_color_waiting(couleur_attente_1);
+                key.set_color_waiting(color_f_little);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur attente annulaire",(float*)&couleur_attente_2))
+        if (ImGui::ColorEdit4("couleur attente annulaire",(float*)&color_f_middle))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_color_waiting(couleur_attente_2);
+                key.set_color_waiting(color_f_middle);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur attente majeur",(float*)&couleur_attente_3))
+        if (ImGui::ColorEdit4("couleur attente majeur",(float*)&color_f_ring))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_color_waiting(couleur_attente_3);
+                key.set_color_waiting(color_f_ring);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur attente index",(float*)&couleur_attente_4))
+        if (ImGui::ColorEdit4("couleur attente index",(float*)&color_f_index))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_color_waiting(couleur_attente_4);
+                key.set_color_waiting(color_f_index);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur attente pouce",(float*)&couleur_attente_5))
+        if (ImGui::ColorEdit4("couleur attente pouce",(float*)&color_f_thumb))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_color_waiting(couleur_attente_5);
+                key.set_color_waiting(color_f_thumb);
             }
         }
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur presse",(float*)&couleur_presse))
+        if (ImGui::ColorEdit4("couleur presse",(float*)&color_pressed))
         {
-            for(auto& key : keys_)
+            for(auto& key : keys)
             {
-                key.set_couleur_presse(couleur_presse);
+                key.set_couleur_presse(color_pressed);
             }
         }
-        if (ImGui::InputFloat("espacement touche",      &bordure_touche,    1.0f, 1.0f, "%.2f"))    {}
-        if (ImGui::InputFloat("espacement clavier",     &bordure_clavier,   1.0f, 1.0f, "%.2f"))    {}
+        if (ImGui::InputFloat("espacement touche",      &border_key,    1.0f, 1.0f, "%.2f"))    {}
+        if (ImGui::InputFloat("espacement clavier",     &border_keyboard,   1.0f, 1.0f, "%.2f"))    {}
         
         ImGui::SeparatorText("Grille");
         ImGui::SetNextItemWidth(230.0f);
-        if (ImGui::ColorEdit4("couleur point",          (float*)&couleur_points))                   {}
-        if (ImGui::InputFloat("point taille",           &rayon_points,      0.2f, 1.0f, "%.2f"))    {}
-        if (ImGui::InputInt("Marge supérieur",          &bordure_clavier_top_, 5))                  {}
-        if (ImGui::InputInt("colones",                  &grille[0]))                                {}
-        if (ImGui::InputInt("lignes",                   &grille[1]))                                {}
-        if (ImGui::Checkbox("Afficher la grille",       &is_afficher_points_))                      {}
-        if (ImGui::Checkbox("Afficher les cases",       &is_afficher_cases_))                       {}
+        if (ImGui::ColorEdit4("couleur point",          (float*)&color_dot))                   {}
+        if (ImGui::InputFloat("point taille",           &dot_radius,      0.2f, 1.0f, "%.2f"))    {}
+        if (ImGui::InputInt("Marge supérieur",          &border_keyboard_top, 5))                  {}
+        if (ImGui::InputInt("colones",                  &grid_dimention[0]))                                {}
+        if (ImGui::InputInt("lignes",                   &grid_dimention[1]))                                {}
+        if (ImGui::Checkbox("Afficher la grille",       &is_plot_dot_view_keyboard))                      {}
+        if (ImGui::Checkbox("Afficher les cases",       &is_plot_grid_view_keyboard))                       {}
         ImGui::End();
     }
 }
 
-void Keyboard::vue_liste_touche(ImGuiIO io)
+void Keyboard::view_key_list(ImGuiIO& io)
 {
-    if (is_afficher_liste_touches)
+    if (is_plot_key_list)
     {
-        ImGui::Begin("Gestion des touches", &is_afficher_liste_touches);
-        for (size_t i = 0; i < keys_.size(); ++i) 
+        ImGui::Begin("Gestion des touches", &is_plot_key_list);
+        for (size_t i = 0; i < keys.size(); ++i) 
         {
-            auto& key = keys_[i];
+            auto& key = keys[i];
 
             if (ImGui::Button(("Éditer##" + std::to_string(i)).c_str())) {
                 key.is_plot_settings = !key.is_plot_settings;
@@ -250,7 +206,7 @@ void Keyboard::vue_liste_touche(ImGuiIO io)
             ImGui::SameLine();
             ImGui::PushStyleColor(ImGuiCol_Button, _DEFAULT_COLOR_WARNING_BUTTON_);
             if (ImGui::Button(("Supprimer##" + std::to_string(i)).c_str())) {
-                keys_.erase(keys_.begin() + i);
+                keys.erase(keys.begin() + i);
                 --i; // Ajuster l'index après suppression
             }
             ImGui::PopStyleColor(1); 
@@ -261,24 +217,21 @@ void Keyboard::vue_liste_touche(ImGuiIO io)
     }
 }
 
-int Keyboard::chargerConfigurationClavier(const std::string &cheminFichier)
+int Keyboard::load(const std::string &path)
 {
-    std::ifstream fichier(cheminFichier);
+    std::ifstream fichier(path);
     if (!fichier.is_open()) 
     {
-        std::cerr << "Erreur lors de l'ouverture du fichier : " << cheminFichier << std::endl;
+        std::cerr << "Erreur lors de l'ouverture du fichier : " << path << std::endl;
         return 0;
     }
-
     nlohmann::json j;
     fichier >> j;
     int nb_touche_charge = 0;
-
     for (const auto& item : j["keys"]) 
     {
         nb_touche_charge++;
         Key key;
-
         // Chargement des positions
         if (item.contains("positions") && item["positions"].is_array())
         {
@@ -304,24 +257,33 @@ int Keyboard::chargerConfigurationClavier(const std::string &cheminFichier)
         // Chargmenet de la position du text
         if (item.contains("lbl_pos"))
         {
-            // todo
+            key.set_lbl_position(item["lbl_pos"].get<int>());
         }
         if (item.contains("finger"))
         {
-            // todo
+            key.set_finger_assignment(item["finger"].get<int>());
+        }
+        else
+        {
+            std::cerr << "Aucun doigt défini pour cette touche." << std::endl;
         }
         // Chargement des caractères et modificateurs
         if (item.contains("chars") && item["chars"].is_array())
         {
             for (const auto& charItem : item["chars"]) 
             {
-                if (charItem.contains("char"))
+                if (charItem.contains("char") && charItem.contains("mod_1") && charItem.contains("mod_2"))
                 {
                     char character = charItem["char"].get<std::string>()[0];
                     int m1 = charItem["mod_1"].get<int>();
                     int m2 = charItem["mod_2"].get<int>();
-
-                    key.add_char(character, m1, m2);
+                    if (charItem.contains("label")){
+                        key.add_char(charItem["label"].get<std::string>(), character, m1, m2);
+                    }
+                    else
+                    {
+                        key.add_char(character, m1, m2);
+                    }
                 }
                 else
                 {
@@ -334,81 +296,138 @@ int Keyboard::chargerConfigurationClavier(const std::string &cheminFichier)
             std::cerr << "Aucun caractère défini pour une touche." << std::endl;
         }
 
-        keys_.push_back(key);
+        keys.push_back(key);
     }
     return nb_touche_charge;
 }
 
-
-
 std::vector<Key> Keyboard::get_keys()
 {
-    return keys_;
+    return keys;
 }
 
-void Keyboard::plot_points(ImGuiIO io)
+void Keyboard::plot_dot(ImGuiIO io)
 {
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    for (size_t i = 0; i < grille[0]; i++) 
+    for (size_t i = 0; i < grid_dimention[0]; i++) 
     {
-        for (size_t j = 0; j < grille[1]; j++) 
+        for (size_t j = 0; j < grid_dimention[1]; j++) 
         {
             ImVec2 position_point = ImVec2(
-                position_fenetre.x + (taille_de_touche.x/2) + taille_de_touche.x * i + bordure_clavier ,
-                position_fenetre.y + (taille_de_touche.y/2) + taille_de_touche.y * j + bordure_clavier + bordure_clavier_top_
+                windows_position.x + (key_size.x/2) + key_size.x * i + border_keyboard ,
+                windows_position.y + (key_size.y/2) + key_size.y * j + border_keyboard + border_keyboard_top
             );
-            draw_list->AddCircleFilled(position_point, rayon_points, ImGui::ColorConvertFloat4ToU32(couleur_points));
+            draw_list->AddCircleFilled(position_point, dot_radius, ImGui::ColorConvertFloat4ToU32(color_dot));
         }
     }
 }
 
 void Keyboard::update_listes()
 {
-    for (size_t i = 0; i < keys_.size(); i++)
+    list_char.clear();
+    list_index_key.clear();
+    list_mod_1.clear();
+    list_mod_2.clear();
+
+    for (size_t i = 0; i < keys.size(); i++)
     {
-        auto& key = keys_[i];
+        auto& key = keys[i];
         for (size_t j = 0; i < key.get_nb_char(); j++)
         {
-            const auto& charactere = key.get_char_by_index(j);    // Liste de tous les char contenue sur toutes les touches
+            const auto& charactere = key.get_char_by_index(j);  // Liste de tous les char contenue sur toutes les touches
             const auto& modifier1 = key.get_mod_1_by_index(j);  // Liste de tous les modifier de chaque char 
             const auto& modifier2 = key.get_mod_2_by_index(j);  // Liste de tous les modifier de chaque char 
 
-            liste_des_char.push_back(charactere);
-            liste_des_modifier_1.push_back(modifier1);
-            liste_des_modifier_2.push_back(modifier2);
-            liste_des_index_des_touches.push_back(i);
+            list_char.push_back(charactere);
+            list_mod_1.push_back(modifier1);
+            list_mod_2.push_back(modifier2);
+            list_index_key.push_back(i);
         }
     }
 }
 
-int Keyboard::key_index_of_char(char c)
+int Keyboard::index_of_char(const char c)
 {
-    for (size_t i = 0; i < liste_des_char.size(); i++)
+    for(size_t i = 0; i < list_char.size(); i++)
     {
-        if (c == liste_des_char[i])
+        if (c == list_char[i])
         {
             return i;
-        }   
+        }
     }
+    throw std::logic_error("La liste des caractères ne contient pas '" + std::string(1, c) + "'");
     return -1;
 }
 
-void Keyboard::plot_cases(ImGuiIO io)
+int Keyboard::key_index_of_index(const int i)
+{
+    if (i>= list_index_key.size() || i < 0)
+    {
+        throw std::out_of_range("L'index de longueur " + std::to_string(i) + " est hors des limites autorisées.");
+        return -1;
+    }
+    else
+    {
+        return list_index_key[i];
+    }
+}
+
+int Keyboard::mod_1_of_index(const int i)
+{
+    if (i>= list_mod_1.size() || i < 0)
+    {
+        throw std::out_of_range("L'index de longueur " + std::to_string(i) + " est hors des limites autorisées.");
+        return -1;
+    }
+    else
+    {
+        return list_mod_1[i];
+    }
+}
+
+int Keyboard::mod_2_of_index(const int i)
+{
+    if (i>= list_mod_2.size() || i < 0)
+    {
+        throw std::out_of_range("L'index de longueur " + std::to_string(i) + " est hors des limites autorisées.");
+        return -1;
+    }
+    else
+    {
+        return list_mod_2[i];
+    }
+}
+
+struct _coordinate_ Keyboard::coord_of_mouse(ImGuiIO &io)
+{
+    ImVec2 mouse_pos_global = ImGui::GetMousePos();
+    ImVec2 pos_win = ImGui::GetWindowPos();
+    _coordinate_ coord_mouse = 
+    {
+        static_cast<int>((mouse_pos_global.x - pos_win.x - (border_key + border_keyboard)) / key_size.x) ,
+        static_cast<int>((mouse_pos_global.y - pos_win.y - (border_key + border_keyboard + border_keyboard_top)) / key_size.y)
+    };
+
+    std::cout << "pos = ["<<mouse_pos_global.x<<", "<<mouse_pos_global.y<<"] indice ["<<coord_mouse.x<<", "<<coord_mouse.y<<"]"<<std::endl;
+    return coord_mouse;
+}
+
+void Keyboard::plot_grid(ImGuiIO io)
 {
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    for (size_t i = 0; i < grille[0]; i++) 
+    for (size_t i = 0; i < grid_dimention[0]; i++) 
     {
-        for (size_t j = 0; j < grille[1]; j++) 
+        for (size_t j = 0; j < grid_dimention[1]; j++) 
         {
             ImVec2 coin_TL = ImVec2(
-                position_fenetre.x + bordure_touche*2 + taille_de_touche.x * i + bordure_clavier ,
-                position_fenetre.y + bordure_touche*2 + taille_de_touche.y * j + bordure_clavier + bordure_clavier_top_
+                windows_position.x + border_key*2 + key_size.x * i + border_keyboard ,
+                windows_position.y + border_key*2 + key_size.y * j + border_keyboard + border_keyboard_top
             );
             ImVec2 coin_BR = ImVec2(
-                coin_TL.x - bordure_touche*4 + taille_de_touche.x,
-                coin_TL.y - bordure_touche*4 + taille_de_touche.y
+                coin_TL.x - border_key*4 + key_size.x,
+                coin_TL.y - border_key*4 + key_size.y
             );
-            draw_list->AddRect(coin_TL, coin_BR, ImGui::ColorConvertFloat4ToU32(couleur_points));
+            draw_list->AddRect(coin_TL, coin_BR, ImGui::ColorConvertFloat4ToU32(color_dot));
         }
     }
 }

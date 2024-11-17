@@ -3,12 +3,13 @@
     {
       "positions": [
         { "x": 2, "y": 0 },
-        { "x": 2, "y": 1 }
+        { "x": 1, "y": 0 }
       ],
-      "lbl_pos": 0,
+      "lbl_pos": 1,
       "finger": 0,
       "chars": [
         {
+          "label": "test",
           "char": "<",
           "mod_1": 9,
           "mod_2": 9

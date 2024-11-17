@@ -181,12 +181,17 @@ public:
     /**
      * @brief Change le doigt qui est assigné pour appuyer sur la touche.
      * @param f (pour finger) Il est recommandé d'utiliser les variables définies dans la structure
-     *  _finger_ -> [finger_assignment]
-     * qui peuvent être : _INDEX_FINGER_(0), _MIDDLE_FINGER_(1), _RING_FINGER_(2), _LITTLE_FINGER_
-     * (3) et _THUMB_(4)
+     *  _finger_ -> [finger_assignment] qui peuvent être : _INDEX_FINGER_(0), _MIDDLE_FINGER_(1),
+     * _RING_FINGER_(2), _LITTLE_FINGER_(3) et _THUMB_(4)
      * @throws std::out_of_range si l'entier n'est pas compris entre 0 et 4.
      */
     void set_finger_assignment(int f);
+    /**
+     * @brief Change la position du label pour la touche
+     * @param i (pour i) Index de la coordonner dans le vecteur contenant les positions de la touche
+     * @throws std::out_of_range si l'entier n'est pas compris entre 0 et position_key.size()-1.
+     */
+    void set_lbl_position(int i);
 
     // AFFICHAGE
     /**
@@ -236,15 +241,15 @@ private:
     Liste des caratères de la touche
     Tous les caractère sont dans des tableaux qui ont tous la même longueurs 
     */
-    std::vector<std::string>            list_labels             = {_DEFAULT_KEY_LABEL_};            // Liste de tous les label des caratère que le touche peut écrire
-    std::vector<char>                   list_chars              = {_DEFAULT_KEY_CHAR_};             // Liste de tous les caractère que le touche peux avoir
-    std::vector<int>                    list_modifier_1         = {_DEFAULT_KEY_MODIFIER_};         // Liste de tous les premier modifiacteur relatif au caractère de même index
-    std::vector<int>                    list_modifier_2         = {_DEFAULT_KEY_MODIFIER_};         // Liste de tous les seconde modificateur relatif au caractère de même index
+    std::vector<std::string>            list_labels             = {};                               // Liste de tous les label des caratère que le touche peut écrire
+    std::vector<char>                   list_chars              = {};                               // Liste de tous les caractère que le touche peux avoir
+    std::vector<int>                    list_modifier_1         = {};                               // Liste de tous les premier modifiacteur relatif au caractère de même index
+    std::vector<int>                    list_modifier_2         = {};                               // Liste de tous les seconde modificateur relatif au caractère de même index
     // paramètre de la touche
     int                                 key_modifier            = _DEFAULT_KEY_MODIFIER_;           // 
     int                                 finger_assignment       = _DEFAULT_FINGER_ASSIGNMENT_;      // 
     // Postitions 
-    std::vector<_coordinate_>           position_key            = {_DEFAULT_COORDINATE_};           // 
+    std::vector<_coordinate_>           position_key            = {};                               // 
     int                                 position_label          = _DEFAULT_LABEL_POSITION_;         // index de la coordonée de la positions dans le vecteur position_key
     // Description de la touche pour l'affichage
     int                                 state_key               = _DEFAULT_KEY_STATE_;              // 
@@ -253,9 +258,6 @@ private:
     ImVec4                              color_pressed           = _DEFAULT_COLOR_KEY_PRESSED_;      // 
     ImVec4                              color_text              = _DEFAULT_COLOR_TEXT_;             // 
     // Variables pour les paramètre
-    int                                 selected_mod_1          = _DEFAULT_KEY_MODIFIER_;           // 
-    int                                 selected_mod_2          = _DEFAULT_KEY_MODIFIER_;           // 
-    std::vector<std::pair<int, int>>    modificateurs_selectionnes;                                 // 
     char                                buffer_label[256];                                          // 
 };
 

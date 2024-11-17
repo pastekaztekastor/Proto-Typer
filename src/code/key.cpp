@@ -116,7 +116,14 @@ void Key::set_finger_assignment(int f)
     finger_assignment = f;
 }
 
-
+void Key::set_lbl_position(int i)
+{
+    if (i >= position_key.size())
+    {
+        throw std::out_of_range("Il est impossible de choisir un index qui n'est pas dans la liste des positions");
+    }
+    position_label = i;
+}
 
 void Key::render(
     ImGuiIO& io,
@@ -227,11 +234,11 @@ void Key::render(
                 }
             }
         }
-        position_point = ImVec2(
-            pos_win.x + (key_size.x/2) + key_size.x * position_key[position_label].x + keyboard_border ,
-            pos_win.y + (key_size.y/2) + key_size.y * position_key[position_label].y + keyboard_border + keyboard_border_top
-        );
     }
+    position_point = ImVec2(
+        pos_win.x + (key_size.x/2) + key_size.x * position_key[position_label].x + keyboard_border ,
+        pos_win.y + (key_size.y/2) + key_size.y * position_key[position_label].y + keyboard_border + keyboard_border_top
+    );
     ImVec2 text_size = ImGui::CalcTextSize(list_labels[i_of_list].c_str());
     ImVec2 text_pos = ImVec2(
         position_point.x - (text_size.x/2),
@@ -275,9 +282,6 @@ bool Key::view_settings(ImGuiIO& io)  // Utilisation de la référence pour évi
             out = true;
         }
         const char* labels_combo_mod[] = _ALL_KEY_MODIFIER_;
-        if (modificateurs_selectionnes.size() < list_chars.size()) {
-            modificateurs_selectionnes.resize(list_chars.size(), {0, 0}); // Initialiser avec "Aucun" pour les deux modificateurs
-        }
         // Boucle pour afficher chaque caractère et ses modificateurs
         for (size_t i = 0; i < list_chars.size(); ++i) {
             ImGui::PushID(static_cast<int>(i));  // Assigner un ID unique pour chaque champ pour éviter les conflits
@@ -290,19 +294,20 @@ bool Key::view_settings(ImGuiIO& io)  // Utilisation de la référence pour évi
             }
             ImGui::SameLine();
             ImGui::SetNextItemWidth(100.0f);
-            if (ImGui::Combo("Mod 1", &modificateurs_selectionnes[i].first, labels_combo_mod, IM_ARRAYSIZE(labels_combo_mod))) {
+            if (ImGui::Combo("Mod 1", &list_modifier_1[i], labels_combo_mod, IM_ARRAYSIZE(labels_combo_mod))) {
                 out = true;
             }
             ImGui::SameLine();
             ImGui::SetNextItemWidth(100.0f);
-            if (ImGui::Combo("Mod 2", &modificateurs_selectionnes[i].second, labels_combo_mod, IM_ARRAYSIZE(labels_combo_mod))) {
+            if (ImGui::Combo("Mod 2", &list_modifier_2[i], labels_combo_mod, IM_ARRAYSIZE(labels_combo_mod))) {
                 out = true;
             }
             ImGui::SameLine();
             ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(255, 0, 0, 255)); // Couleur rouge pour le bouton
             if (ImGui::Button("Supprimer")) {
                 list_chars.erase(list_chars.begin() + i);
-                modificateurs_selectionnes.erase(modificateurs_selectionnes.begin() + i);
+                list_modifier_1.erase(list_modifier_1.begin() + i);
+                list_modifier_2.erase(list_modifier_2.begin() + i);
                 --i; // Ajuster l'indice pour ne pas sauter l'élément suivant
                 out = true;
             }
@@ -323,7 +328,7 @@ bool Key::view_settings(ImGuiIO& io)  // Utilisation de la référence pour évi
 
         ImGui::SeparatorText("Modifier la position et la forme");
         // Affichage et modification des paires de coordonnées
-        for (size_t i = 0; i < position_key.size(); i += 2) {
+        for (size_t i = 0; i < position_key.size(); i ++) {
             ImGui::PushID(i);  // Assigner un ID unique pour chaque champ pour éviter les conflits
 
             int x = position_key[i].x;
